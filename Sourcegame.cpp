@@ -1,26 +1,33 @@
 #include<iostream>
 #include<windows.h>
-#include<conio.h>
-#include<chrono>
 #include<ctime>
+#include <time.h>
+#include <conio.h> //for time analysis
 
 int height = 25;                                             //height of window
 
-int width = 100;                                            //width of window
+int width = 100;                                             //width of window
+//variables of time analysis
+time_t t1;
+time_t t2;
+time_t t3;
+time_t t4;
+time_t t5;
+time_t t6;
+time_t t7;
+time_t t8;
 
-int gameover = 0, counter, gameover2 = 0, choice, counter2;
+int gameover = 0;
+int counter;
+int gameover2 = 0;
+int counter2;
+int choice;
+char choice1;
 int lflag = 0, rflag = 0, uflag = 0, dflag = 0;
 int lflag2 = 0, rflag2 = 0, uflag2 = 0, dflag2 = 0;
 short fcount;
 
 using namespace std;
-
-long fibonacci(unsigned n)
-{
-	if (n < 2) return n;
-	return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
 
 class Snake
 
@@ -68,42 +75,42 @@ class Snake
 
 
 
-	void textcolour(int k)                                    //this function controls the color of the text
+	void textcolour(int k)                                        //this function controls the color of the text
 	{
-		// is color code according to your need.
+		                                                         // is color code according to your need.
 
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);      //To get the value of handle, call a predefined function ìGetStdHandle(STD_OUTPUT_HANDLE)î
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);      //To get the value of handle, call a predefined function ‚ÄúGetStdHandle(STD_OUTPUT_HANDLE)‚Äù
 		SetConsoleTextAttribute(hConsole, k);
 
 	}
 
 public:
 
-	void window()
+	void window()                                             // to make the boarder
 	{
 		if (choice == 1)
 			textcolour(4);
 		else
 			textcolour(1);
-		for (int i = 0; i <= width; i++)
+		for (int i = 0; i <= width; i++)             //draw the width of the border
 		{
 			gotoxy(i, 0);
-			cout << "€";
+			cout << "√õ";                            //shape of the boarder
 			gotoxy(i, height);
-			cout << "€";
+			cout << "√õ";
 		}
 
-		for (int i = 0; i <= height; i++)
+		for (int i = 0; i <= height; i++)        //draw the height of the border
 		{
 			gotoxy(0, i);
-			cout << "€";
+			cout << "√õ";
 			gotoxy(width, i);
-			cout << "€";
+			cout << "√õ";
 		}
 	}
 
 
-	void setup()
+	void setup()                                        // single player mood
 	{
 		counter = 0;
 		gameover = 0;
@@ -111,49 +118,43 @@ public:
 		resetflag();
 		nameandscore();
 		head = new node;                 //creating an new node
-		head->nx = width / 2;
-		head->ny = height / 2;
+		head->nx = width / 7;
+		head->ny = height / 7;
 		head->next = NULL;
 		head->back = NULL;
-		x = width / 2;                     //initial X position of the snake
-		y = height / 2;                    //initial Y position of the snake
+		x = width / 7;                     //initial X position of the snake
+		y = height / 7;                    //initial Y position of the snake
 
-		fx = rand() % width;
+		fx = rand() % width;                 //give random values does not exceed the value of width
 		while (fx == 0 || fx == width)
 		{
 			fx = rand() % width;
 		}
 
-		//give random values does not exceed the value of width
-
-
-		fy = rand() % height;
+		fy = rand() % height;               //give random values does not exceed the value of height
 		while (fy == 0 || fy == height)
 		{
 			fy = rand() % height;
 		}
-
-		//give random values does not exceed the value of height
-
 	}
 
-	void setup2()
+	void setup2()                     // Two players mood
 	{
 		resetflag2();
 		gameover2 = 0;
 		counter2 = 0;
 		fcount = 10;
-		head2 = new node;
-		head2->nx = width / 2 + 5;
-		head2->ny = height / 2 + 5;
+		head2 = new node;                      //creating an new node
+		head2->nx = width / 2;
+		head2->ny = height / 2;
 		head2->next = NULL;
 		head2->back = NULL;
-		x2 = width / 2 + 5;
-		y2 = height / 2 + 5;
+		x2 = width / 2;                //initial X2 position of the snake
+		y2 = height / 2;              //initial Y2 position of the snake
 
 	}
 
-	void drawlist(struct node* h, int k)
+	void drawlist(struct node* h, int k)            //to draw Snake
 	{
 		textcolour(k);
 		struct node* ptr;
@@ -161,13 +162,13 @@ public:
 		while (ptr != NULL)
 		{
 			gotoxy(ptr->nx, ptr->ny);
-			cout << "€";
+			cout << "√õ";
 			ptr = ptr->next;
 		}
 	}
 
 
-	void destroylist(struct node* h)
+	void destroylist(struct node* h)                  // avoid making infinity linked list of snake
 	{
 		struct node* ptr;
 		ptr = h;
@@ -178,23 +179,31 @@ public:
 			ptr = ptr->next;
 		}
 	}
-
-
-
-	void draw()
+	void draw()                        // draw game 1
 	{
-
-		drawlist(head, 2);
-		drawlist(head2, 5);
+		drawlist(head, 7);                // draw snake 1
 		gotoxy(fx, fy);
 		textcolour(4);
-		cout << "@";
-		Sleep(40);
+		cout << "\242";                      // fruit shape
+		Sleep(40);                        // To control the speed of snake
+		destroylist(head);
+	}
+
+
+	void draw2()                            // draw game 2
+	{
+
+		drawlist(head, 12);                // draw snake 1
+		drawlist(head2, 9);               // draw snake 2
+		gotoxy(fx, fy);
+		textcolour(4);
+		cout << "\242";                      // fruit shape
+		Sleep(40);                        // To control the speed of snake
 		destroylist(head);
 		destroylist(head2);
 	}
 
-	void resetflag()
+	void resetflag()                      // reset first snake flags
 	{
 		uflag = 0;
 		dflag = 0;
@@ -202,7 +211,7 @@ public:
 		rflag = 0;
 	}
 
-	void resetflag2()
+	void resetflag2()                    // reset second snake flags
 	{
 		uflag2 = 0;
 		dflag2 = 0;
@@ -210,7 +219,7 @@ public:
 		rflag2 = 0;
 	}
 
-	void play()
+	void play()              // the process of the game
 	{
 		int h;
 		char ch;
@@ -224,6 +233,7 @@ public:
 			h = ch;
 			switch (h)
 			{   //this cases is the values of ascii code of the pressed key
+				// this ascii code for keys to control of direction of snake 1
 			case 72:if (dflag != 1) { resetflag(); uflag = 1; }
 				   break;
 			case 80:if (uflag != 1) { resetflag(); dflag = 1; }
@@ -232,6 +242,8 @@ public:
 				   break;
 			case 77:if (lflag != 1) { resetflag(); rflag = 1; }
 				   break;
+
+				   // this ascii code for keys to control of direction of snake 2
 
 			case 119:if (dflag2 != 1) { resetflag2(); uflag2 = 1; }
 					break;
@@ -247,9 +259,9 @@ public:
 		}
 	}
 
-	void box(int m1, int n1, int m2, int n2)
+	void box(int m1, int n1, int m2, int n2)           // Make the inner box  which any window of welcom is shown
 	{
-		for (int i = m1; i <= m2; i++)
+		for (int i = m1; i <= m2; i++)                 // draw width of yhe inner box
 		{
 			gotoxy(i, n1);
 			cout << "//";
@@ -257,7 +269,7 @@ public:
 			cout << "//";
 		}
 
-		for (int i = n1; i <= n2; i++)
+		for (int i = n1; i <= n2; i++)              // draw height of the inner box
 		{
 			gotoxy(m1, i);
 			cout << "//";
@@ -265,7 +277,7 @@ public:
 			cout << "//";
 		}
 	}
-	char welcomegame()
+	char welcomegame()                       // start page
 	{
 		char k;
 		textcolour(5);
@@ -276,16 +288,21 @@ public:
 		textcolour(9);
 		gotoxy(width / 2 - 16, height / 2 - 3);
 		cout << "a.start \n";
-		gotoxy(width / 2 - 16, height / 2 - 1);
+		gotoxy(width / 2 - 16, height / 2 - 2);
 		cout << "b.quit\n";
 		gotoxy(width / 2 - 16, height / 2);
 		cin >> k;
-		//choose the no. of players
+		while (k != 'a' && k != 'b')
+            {
+			cout << endl;
+			cout << "please choose (a) or (b)" << endl;
+			cin >> k;
+		}
 		system("cls");
 		return k;
 
 	}
-	void welcome()
+	void welcome()     //The page that appears after the start page to choose mood game
 	{
 		textcolour(5);
 		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
@@ -298,13 +315,22 @@ public:
 		gotoxy(width / 2 - 16, height / 2 - 1);
 		cout << "Press 2 For Multiplayer \n";
 		gotoxy(width / 2 - 16, height / 2);
-		cin >> choice;                               //choose the no. of players
-		system("cls");
+		cin >> choice1;
+		while (choice1 != '1' && choice1 != '2')
+            {
+			cout << endl;
+			cout << "please choose (1) or (2)" << endl;
+			cin >> choice1;
+		}
+		if (choice1 == '1')
+			choice = 1;
+		else
+			choice = 2;
+		system("cls");           //system() : It is used to execute a system command by passing the command as argument to this function.
+                                // Use ‚Äúcls‚Äù in place of ‚Äúclear‚Äù in system() call.
 	}
 
-
-
-	void welcome1()
+	void welcome1()                           // for mood single player
 	{
 		textcolour(5);
 		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
@@ -314,14 +340,16 @@ public:
 		textcolour(8);
 		gotoxy(width / 2 - 13, height / 2);
 		cout << "Enter Your Name : ";
-		cin >> playername;
+		cin.clear(); // clear input buffer to restore cin to a usable state
+		cin.ignore(INT_MAX, '\n'); // ignore last input
+		cin.getline(playername, 50);
 		system("cls");
 		//system() : It is used to execute a system command by passing the command as argument to this function.
-		// Use ìclsî in place of ìclearî in system() call.
+		// Use ‚Äúcls‚Äù in place of ‚Äúclear‚Äù in system() call.
 
 	}
 
-	void welcome2()
+	void welcome2()                           // for mood Two player
 	{
 		textcolour(5);
 		box(width / 2 - width / 4, height / 2 - height / 4, width / 2 + width / 4, height / 2 + height / 4);
@@ -334,16 +362,17 @@ public:
 		gotoxy(width / 2 - 13, height / 2 + 2);
 		cout << "Enter Player2 Name : ";
 		gotoxy(width / 2 + 7, height / 2);
-		cin >> playername;
+		cin.clear();                                     // clear input buffer to restore cin to a usable state
+		cin.ignore(INT_MAX, '\n');                       // ignore last input
+		cin.getline(playername, 50);
 		gotoxy(width / 2 + 7, height / 2 + 2);
-		cin >> playername2;
-		system("cls");
+		cin.getline(playername2, 50);
+		system("cls");                                  //system() : It is used to execute a system command by passing the command as argument to this function.
+		                                               // Use ‚Äúcls‚Äù in place of ‚Äúclear‚Äù in system() call.
 	}
 
 
-
-
-	char end()
+	char end()               // This is the function on which the end window appears and determines whether you win or lose
 	{
 		char c;
 		gotoxy(width / 2 - 5, height / 2 - 4);
@@ -362,17 +391,17 @@ public:
 			if (gameover != 0)
 			{
 				gotoxy(width / 2 - 15, height / 2 + 1);
-				cout << playername << " has lost !";// << endl << playername2 << "has won";
+				cout << playername << " has lost !";
 			}
 			else
 			{
 				gotoxy(width / 2 - 15, height / 2 + 1);
-				cout << playername2 << " has lost !";// << endl << playername << "has won";
+				cout << playername2 << " has lost !";
 			}
 			if (fcount == 0)
 			{
 				textcolour(4);
-				gotoxy(width / 2 - 15, height / 2 + 1);
+				gotoxy(width / 2 - 15, height / 2 + 1);      // if player1 or player2 in mood Two player eat all the fruit
 				if (counter > counter2)
 				{
 					cout << playername << " has WON !";
@@ -385,22 +414,29 @@ public:
 		}
 		textcolour(6);
 		gotoxy(width / 2 - 15, height / 2 + 2);
-		cout << "(Y / N)" << endl;
+		cout << "(y / n)" << endl;
 		gotoxy(width / 2 - 15, height / 2 + 3);
-		cout << "Press Y if you Want To Play Again  : " << endl;
+		//asking the user if he wants to play again
+		cout << "Press y if you Want To Play Again  : " << endl;
 		gotoxy(width / 2 - 15, height / 2 + 4);
-		cout << "Press N To Return To Start Page : " << endl;
+		cout << "Press n To Return To Start Page : " << endl;
 		gotoxy(width / 2 - 15, height / 2 + 5);
 		cin >> c;
-		system("cls");
+		while (c != 'y' && c != 'n') {
+			cout << endl;
+			cout << "please choose (y) or (n)" << endl;
+			cin >> c;
+		}
+
+		system("cls");                                         //system() : It is used to execute a system command by passing the command as argument to this function.
+		                                                      // Use ‚Äúcls‚Äù in place of ‚Äúclear‚Äù in system() call.
 		return c;
 
 	}
 
-
-
 	void run()    //directions of snake's motion
 	{
+		          // directions of snake 1 motion
 		if (uflag == 1)
 			y--;
 		else if (dflag == 1)
@@ -409,7 +445,7 @@ public:
 			x--;
 		else if (rflag == 1)
 			x++;
-
+		              // directions of snake 2 motion
 
 		if (uflag2 == 1)
 			y2--;
@@ -422,7 +458,7 @@ public:
 
 	}
 
-	void dolist(struct node* h, int pp, int qq)
+	void dolist(struct node* h, int pp, int qq)      //to make the snake grow when it eats
 	{
 		struct node* ptr, * prev;
 		ptr = h;
@@ -446,60 +482,15 @@ public:
 		prev->ny = qq;
 	}
 
-
-
-
-	void drawagain()
+	void generatefruit()          // function to make fruit appear in random places
 	{
-		if (x == width)
-		{
-			x = 1;
-		}
-		if (x == 0)
-		{
-			x = width - 1;
-		}
-		if (y == 0)
-		{
-			y = height - 1;
-		}
-		if (y == height)
-		{
-			y = 1;
-		}
-	}
-
-
-	void drawagain2()
-	{
-		if (x2 == width)
-		{
-			x2 = 1;
-		}
-		if (x2 == 0)
-		{
-			x2 = width - 1;
-		}
-		if (y2 == 0)
-		{
-			y2 = height - 1;
-		}
-		if (y2 == height)
-		{
-			y2 = 1;
-		}
-	}
-
-	void generatefruit()
-	{
-		//label1:
-		fx = rand() % width;
+		fx = rand() % width;    // make fruit appers in random places in width
 		while (fx == 0 || fx == width)
 		{
 			fx = rand() % width;
 
 		}
-		fy = rand() % height;
+		fy = rand() % height;    // make fruit appers in random places in height
 		while (fy == 0 || fy == height)
 		{
 			fy = rand() % height;
@@ -507,7 +498,7 @@ public:
 
 	}
 
-	void checkfcount()
+	void checkfcount()                  //one of the cases of ending the game in two player mode
 	{
 		if (fcount == 0)
 		{
@@ -516,29 +507,28 @@ public:
 		}
 	}
 
-	void checkup()
+	void checkup()                               //a function that show the Scenarios of end game for first snake
 	{
-		if (choice == 1)
+		if (choice == 1)                         //hit boarder in single player mode
 		{
 			if (x == width || x == 0)
 				gameover = 1;
 			if (y == height || y == 0)
 				gameover = 1;
 		}
-		if (choice == 2)
+		if (choice == 2)                         //hit boarder in double player mode
 		{
 			if (x == width || x == 0 || x2 == width || x2 == 0)
 				gameover = 1;
 			if (y == height || y == 0 || y2 == height || y2 == 0)
 				gameover = 1;
 		}
-		drawagain();
 
 		struct node* h;
-		h = head->next;
+		h = head->next;                 // making the snake move
 		while (h != NULL)
 		{
-			if (x == h->nx && y == h->ny)
+			if (x == h->nx && y == h->ny)       // snake hits itself in one player mode
 			{
 				gameover = 1;
 				break;
@@ -546,7 +536,7 @@ public:
 			h = h->next;
 		}
 
-		if (x == fx && y == fy)
+		if (x == fx && y == fy)                // snake hits itself in two player mode
 		{
 			if (choice == 2)
 			{
@@ -573,15 +563,13 @@ public:
 		dolist(head, x, y);
 	}
 
-
-	void checkup2()
+	void checkup2()                             //a function that show the Scenarios of end game for second snake
 	{
-		drawagain2();
 		struct node* h;
-		h = head2->next;
+		h = head2->next;                       //second snake moves
 		while (h != NULL)
 		{
-			if (x2 == h->nx && y2 == h->ny)
+			if (x2 == h->nx && y2 == h->ny)    //second snake hits itself
 			{
 				gameover2 = 1;
 				break;
@@ -612,54 +600,61 @@ public:
 		}
 		dolist(head2, x2, y2);
 	}
-	void again()
+
+	void again()              // function to make user play again
 	{
 		welcome();
-		if (choice == 1)
+		if (choice == 1)  // if choice 1 user will play single player
 		{
-			
+
 			game1();
 		}
 
-		if (choice == 2)
+		else if (choice == 2)  // if choice 2 user will play double player
 		{
 			game2();
+
+		}
+		else
+		{
+			cout << "please choose (1) or (2)" << endl;
+			void again();
+
 		}
 
 	}
 
-	int game1()
+	int game1()              // single player mode
 	{
 		char ch;
-		
+		t1=clock();         // start of the time of analysis + user game
 		welcome1();
-		
 		do {
 			setup();
 			window();
-			
-
+            t3=clock();    // start of the time of user game
 			while (!gameover)
 			{
+
 				draw();
 				play();
 				run();
 				checkup();
-
 			}
+			t4=clock();         //end of the time of user game
 			ch = end();
-
+			t2=clock();         //end of the time of analysis + user game
 		} while (ch == 'y' || ch == 'Y');
 		if (welcomegame() == 'a') {
 			again();
 		}
-		
 		return 0;
-	}
+		}
 
-	int game2()
+	int game2()                // double player mode
 	{
 		char ch, k;
+		t5=clock();            // start of the time of analysis + user game
 		welcome2();
 		do {
 
@@ -667,35 +662,30 @@ public:
 			setup();
 			window();
 
+			t7=clock();        // start of the time of user game
 			while (gameover != 1 && gameover2 != 1)
 			{
-				draw();
+				draw2();
 				play();
 				run();
 				checkup();
 				checkup2();
-
-			}ch = end();
-			
-
+			}
+			t8=clock();       //end of the time of user game
+			ch = end();
+			t6=clock();       //end of the time of analysis + user game
 		} while (ch == 'y' || ch == 'Y');
-		
+
 		if (welcomegame() == 'a')
 		{
 			again();
 		}
-		
-
 		return 0;
 	}
 
 };
 int main()
 {
-	auto start = chrono::steady_clock::now();
-
-	// do some stuff here
-   //sf:: sleep(sf::int);3;*/
 	Snake s;
 	if (s.welcomegame() == 'b')                        //choose the no. of players
 
@@ -706,39 +696,22 @@ int main()
 	{
 		s.game1();
 	}
-	if (choice == 2)
+	else if (choice == 2)
 	{
 		s.game2();
 	}
+	else {
+		system("exit");
+	}
 	system("exit");
-	auto end = chrono::steady_clock::now();
-
-	cout << "Elapsed time in nanoseconds: "
-		<< chrono::duration_cast<chrono::nanoseconds>(end - start).count()
-		<< " ns" << endl;
-
-	cout << "Elapsed time in microseconds: "
-		<< chrono::duration_cast<chrono::microseconds>(end - start).count()
-		<< " µs" << endl;
-
-	cout << "Elapsed time in milliseconds: "
-		<< chrono::duration_cast<chrono::milliseconds>(end - start).count()
-		<< " ms" << endl;
-
-	cout << "Elapsed time in seconds: "
-		<< chrono::duration_cast<chrono::seconds>(end - start).count()
-		<< " sec" << endl;
-
-
-
-	/*chrono::time_point<chrono::system_clock> start, end;
-
-   start = chrono::system_clock::now();
-   cout << "f(42) = " << fibonacci(42) << '\n';
-   end = chrono::system_clock::now();
-
-   chrono::duration<double> elapsed_seconds = end - start;
-   time_t end_time = chrono::system_clock::to_time_t(end);
-
-   cout << "finished computation at " << ctime(&end_time)<< "elapsed time: " << elapsed_seconds.count() << "s\n";*/
+	double cpu_time_used1 = ((double) (t2 - t1)) / CLOCKS_PER_SEC; // time of the analysis of the single game + time of the user game
+	double cpu_time_used2 = ((double) (t4 - t3)) / CLOCKS_PER_SEC; // time of the user game1
+	double cpu_time_used3 = ((double) (t6 - t5)) / CLOCKS_PER_SEC; // time of the analysis of the multplayer game + time of the user game
+	double cpu_time_used4 = ((double) (t8 - t7)) / CLOCKS_PER_SEC; // time of the user game2
+	double timeofanalysis1=cpu_time_used1-cpu_time_used2;
+	double timeofanalysis2=cpu_time_used3-cpu_time_used4;
+	printf("\n");
+    printf("time of single game %f seconds to execute \n", timeofanalysis1);
+    printf("\n");
+    printf("time of multiplayer game %f seconds to execute \n", timeofanalysis2);
 }
