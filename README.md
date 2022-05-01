@@ -1,3 +1,3 @@
 # Snake-Game
-Cairo University Faculty of Engineering
+Cairo University Faculty of Engineering\n
 data structure project
